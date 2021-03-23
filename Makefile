@@ -6,24 +6,28 @@
 #    By: mteerlin <mteerlin@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/03/16 08:52:20 by mteerlin      #+#    #+#                  #
-#    Updated: 2021/03/16 10:04:12 by mteerlin      ########   odam.nl          #
+#    Updated: 2021/03/23 17:28:32 by mteerlin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	= minirt
-SRC		= testimage.c
+NAME	= minirt.out
+SRC		= minirt.c \
+			get_next_line.c \
+			get_next_line_utils.c \
+		startparce.c
 OBJ		= $(SRC:.c=.o)
-HDR		=
+HDR		= get_next_line.h \
+			minirt.h
 
 CFLAGS	= -Wall -Wextra -Werror
 
 all: 		$(NAME)
 
 $(NAME):	$(OBJ)
-				$(CC) -Lmlx -lmlx -framework OpenGL -framework AppKit $(OBJ) libft/libft.a -o $(NAME)
+				$(CC) -Lmlx -lmlx -Llibft -lft -framework OpenGL -framework AppKit $(OBJ) -o $(NAME)
 
 %.o:		%.c
-			$(CC) $(CFLAGS) -Imlx -Ilibft -c $< -o $@
+			$(CC) $(CFLAGS) -Imlx -Ilibft -Iget_next_line -c $< -o $@
 
 clean:
 			rm -f *.o *.so

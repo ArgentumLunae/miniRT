@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/09 14:09:35 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/03/16 17:21:04 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/03/23 10:28:30 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,37 @@ int	mouse_circle(int button, int x, int y, void *param)
 	return (button);
 }
 
+int	move_circle(int x, int y, void *param)
+{
+	int colour;
+	int i;
+	int j;
+	int rad;
+	t_mlx *tparam;
+	
+	j = 0;
+	rad = 40;
+	tparam = (t_mlx *)param;
+	while (j < 510)
+	{
+		i = 0;
+		while (i < 510)
+		{
+//			colour = mlx_get_color_value(tparam->mlx_ptr, ((((i * j)) % 256) << 16) + ((j) << 8) + i);
+			if (sqrt(pow((i - x), 2) + pow((j - y), 2)) <= rad)
+			{
+				colour = mlx_get_color_value(tparam->mlx_ptr, (255 << 16));
+				colour = add_shade((pow((i - x + 0.1 * rad), 2) + pow((j - y + 0.1 * rad), 2)) / ( 1.35 * pow(rad, 2)), colour);
+				((int *)tparam->data_ptr)[i + (510 * j)] = colour;
+			}
+			i++;
+		}
+		j++;
+	}
+	mlx_put_image_to_window(tparam->mlx_ptr, tparam->win_ptr, tparam->img_ptr, 0, 0);
+	return (0);
+}
+
 int main(void)
 {
 	t_mlx mlx;
@@ -215,7 +246,8 @@ int main(void)
 	mlx.img_ptr = mlx_new_image(mlx.mlx_ptr, 510, 510);
 	mlx.data_ptr = mlx_get_data_addr(mlx.img_ptr, &bits_per_pixel, &size_line, &endian);
 	mlx_hook(mlx.win_ptr, 2, 1L << 0, key_triangle, &mlx);
-	mlx_hook(mlx.win_ptr, 5, 1L << 2, mouse_circle, &mlx);
+	mlx_hook(mlx.win_ptr, 4, 1L << 2, mouse_circle, &mlx);
+	mlx_hook(mlx.win_ptr, 6, 1L << 13, move_circle, &mlx);
 	mlx_loop(mlx.mlx_ptr);
 	return (0);
 }
