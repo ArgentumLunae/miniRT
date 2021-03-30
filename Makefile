@@ -6,12 +6,12 @@
 #    By: mteerlin <mteerlin@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/03/16 08:52:20 by mteerlin      #+#    #+#                  #
-#    Updated: 2021/03/23 17:28:32 by mteerlin      ########   odam.nl          #
+#    Updated: 2021/03/30 16:32:25 by mteerlin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minirt.out
-SRC		= minirt.c \
+SRC		= playwithmaths.c \
 			get_next_line.c \
 			get_next_line_utils.c \
 		startparce.c
@@ -24,7 +24,7 @@ CFLAGS	= -Wall -Wextra -Werror
 all: 		$(NAME)
 
 $(NAME):	$(OBJ)
-				$(CC) -Lmlx -lmlx -Llibft -lft -framework OpenGL -framework AppKit $(OBJ) -o $(NAME)
+				$(CC) -fsanitize=address -g -Lmlx -lmlx -Llibft -lft -framework OpenGL -framework AppKit $(OBJ) -o $(NAME)
 
 %.o:		%.c
 			$(CC) $(CFLAGS) -Imlx -Ilibft -Iget_next_line -c $< -o $@

@@ -6,14 +6,23 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 11:04:18 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/03/23 17:40:35 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/03/30 16:35:03 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
 # define MINIRT_H
+# include <stdbool.h>
 
 typedef void	(*t_f)(const char**, void*);
+
+typedef struct s_mlx
+{
+	void	*mlx;
+	void	*win;
+	void	*img;
+	void	*data;
+}	t_mlx;
 
 typedef struct s_vector
 {
@@ -21,6 +30,12 @@ typedef struct s_vector
 	double	y;
 	double	z;
 }	t_vector;
+
+typedef struct s_ray
+{
+	t_vector	start;
+	t_vector	dir;
+}	t_ray;
 
 typedef struct s_rgb
 {
@@ -40,6 +55,14 @@ typedef struct s_ambient
 	double	ratio;
 	t_rgb	colour;
 }	t_ambient;
+
+typedef struct s_light
+{
+	t_vector		coords;
+	double			lux;
+	t_rgb			colour;
+	struct s_light	*next;
+}	t_light;
 
 typedef struct s_square
 {
@@ -89,6 +112,7 @@ typedef struct s_scene
 {
 	t_resolution	*resolution;
 	t_ambient		*ambient;
+	t_light			*light;
 	t_square		*square;
 	t_sphere		*sphere;
 	t_plane			*plane;
@@ -97,5 +121,9 @@ typedef struct s_scene
 }	t_scene;
 
 t_scene	rt_parse(char *file);
+void	rt_parse_resolution(const char **line, void *scene);
+void	rt_parse_sphere(const char **line, void *scene);
+void	rt_parse_light(const char **line, void *scene);
+
 
 #endif
