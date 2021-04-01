@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 11:04:18 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/03/23 17:40:35 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/03/29 15:48:45 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct s_scene
 	t_triangle		*triangle;
 }	t_scene;
 
-t_scene	rt_parse(char *file);
+t_scene	*rt_parse(char *file);
+void rt_free_scene(t_scene *scene);
 
 #endif

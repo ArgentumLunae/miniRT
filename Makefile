@@ -6,25 +6,29 @@
 #    By: mteerlin <mteerlin@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/03/16 08:52:20 by mteerlin      #+#    #+#                  #
-#    Updated: 2021/03/23 17:28:32 by mteerlin      ########   odam.nl          #
+#    Updated: 2021/03/29 15:56:56 by mteerlin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minirt.out
+LIB_DIR = libft/
 SRC		= minirt.c \
 			get_next_line.c \
 			get_next_line_utils.c \
-		startparce.c
+			startparce.c \
+			freescene.c
 OBJ		= $(SRC:.c=.o)
 HDR		= get_next_line.h \
 			minirt.h
+LIBFT	= $(LIB_DIR)libft.a
 
 CFLAGS	= -Wall -Wextra -Werror
 
 all: 		$(NAME)
 
 $(NAME):	$(OBJ)
-				$(CC) -Lmlx -lmlx -Llibft -lft -framework OpenGL -framework AppKit $(OBJ) -o $(NAME)
+			#$(CC) -Lmlx_linux -lmlx -Llibft -lft -framework OpenGL -framework AppKit $(OBJ) -o $(NAME)
+			$(CC) $(OBJ) -Lmlx_linux -lmlx_Linux -Llibft -lft -L/usr/lib -Imlx_Linux -Ilibft -lXext -lX11 -lm -lz -o $(NAME)
 
 %.o:		%.c
 			$(CC) $(CFLAGS) -Imlx -Ilibft -Iget_next_line -c $< -o $@

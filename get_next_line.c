@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/24 11:48:19 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/03/23 10:47:39 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/03/25 12:54:40 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	trim_line(char **str, char **line)
 int		get_next_line(int fd, char **line)
 {
 	int			ret;
-	static char *str[OPEN_MAX];
+	static char *str[1024];
 	char		buff[BUFFER_SIZE + 1];
 
 	if (BUFFER_SIZE == 0 || fd < 0 || line == NULL)
