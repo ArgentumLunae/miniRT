@@ -6,12 +6,11 @@
 #    By: mteerlin <mteerlin@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/03/16 08:52:20 by mteerlin      #+#    #+#                  #
-#    Updated: 2021/03/29 15:56:56 by mteerlin      ########   odam.nl          #
+#    Updated: 2021/04/01 13:26:04 by mteerlin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minirt.out
-LIB_DIR = libft/
 SRC		= minirt.c \
 			get_next_line.c \
 			get_next_line_utils.c \
@@ -26,9 +25,9 @@ CFLAGS	= -Wall -Wextra -Werror
 
 all: 		$(NAME)
 
-$(NAME):	$(OBJ)
-			#$(CC) -Lmlx_linux -lmlx -Llibft -lft -framework OpenGL -framework AppKit $(OBJ) -o $(NAME)
-			$(CC) $(OBJ) -Lmlx_linux -lmlx_Linux -Llibft -lft -L/usr/lib -Imlx_Linux -Ilibft -lXext -lX11 -lm -lz -o $(NAME)
+$(NAME):	$(OBJ) $(HDR)
+#			$(CC) -Lmlx_linux -lmlx -Llibft -lft -framework OpenGL -framework AppKit $(OBJ) -o $(NAME)
+			$(CC) $(OBJ) -Lmlx_linux -lmlx -Llibft -lft -Imlx -Ilibft -L/usr/lib -lXext -lX11 -lm -lz -o $(NAME)
 
 %.o:		%.c
 			$(CC) $(CFLAGS) -Imlx -Ilibft -Iget_next_line -c $< -o $@

@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/09 19:16:49 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/03/29 16:37:18 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/01 13:21:43 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	rt_freesplit(char **split)
 	int	i;
 
 	i = 0;
+	if (split == NULL)
+		return ;
 	while (split[i] != NULL)
 	{
 		free(split[i]);
@@ -31,30 +33,52 @@ void	rt_freesplit(char **split)
 	free(split);
 }
 
-t_vector	rt_parse_vector(const char *str)
+t_vector	*rt_parse_vector(const char *str)
 {
-	t_vector	coords;
+	t_vector	*coords;
 	char		**split;
 
 	split = ft_split(str, ',');
-	coords.x = ft_atof(split[0]);
-	coords.y = ft_atof(split[1]);
-	coords.z = ft_atof(split[2]);
+	coords = malloc(sizeof(t_vector));
+	coords->x = ft_atof(split[0]);
+	coords->y = ft_atof(split[1]);
+	coords->z = ft_atof(split[2]);
 	rt_freesplit(split);
 	return (coords);
 }
 
-t_rgb	rt_parse_colour(const char *str)
+t_rgb	*rt_parse_colour(const char *str)
 {
-	t_rgb	colour;
+	t_rgb	*colour;
 	char	**split;
 
 	split = ft_split(str, ',');
-	colour.r = ft_atoi(split[0]);
-	colour.g = ft_atoi(split[1]);
-	colour.b = ft_atoi(split[2]);
+	colour = malloc(sizeof(t_rgb));
+	colour->r = ft_atoi(split[0]);
+	colour->g = ft_atoi(split[1]);
+	colour->b = ft_atoi(split[2]);
 	rt_freesplit(split);
 	return (colour);
+}
+
+void	rt_parse_light(const char **line, void *scene)
+{
+	t_light	*temp;
+	t_light	newlight;
+
+	temp = ((t_scene *)scene)->light;
+	if (temp == NULL)
+		temp = &newlight;
+	else
+	{
+		while (temp->next != NULL)
+			temp = temp->next;
+		temp->next = &newlight;
+	}
+	newlight.coords = rt_parse_vector(line[1]);
+	newlight.lux = ft_atof(line[2]);
+	newlight.colour = rt_parse_colour(line[3]);
+	newlight.next = NULL;
 }
 
 void	rt_parse_sphere(const char **line, void *scene)
@@ -182,9 +206,7 @@ void	rt_parse_ambient(const char **line, void *scene)
 	((t_scene *)scene)->ambient = a;
 }
 
-typedef void (*func)(const char**, void*);
-
-t_f	*rt_fill_func(t_f func[256])
+t_f	*rt_fill_func(t_f *func)
 {
 	func['\0'] = *rt_parse_ambient;
 	func['R' - 'A'] = *rt_parse_resolution;
@@ -207,10 +229,15 @@ t_scene	*rt_parse(char *file)
 	fd = open(file, O_RDONLY);
 	line = NULL;
 	func = malloc(256 * sizeof(t_f));
+	scene = ft_calloc(1, sizeof(t_scene));
+	if (!func)
+		return (scene);
 	func = rt_fill_func(func);
 	scene = ft_calloc(1, sizeof(t_scene));
+	ft_putstr_fd("start reading\n", 1);
 	while (get_next_line(fd, &line))
 	{
+		ft_putstr_fd("start line\n", 1);
 		if (*line == '\0')
 		{
 			free(line);
@@ -221,11 +248,11 @@ t_scene	*rt_parse(char *file)
 		rt_freesplit(split);
 		free(line);
 		line = NULL;
+		ft_putstr_fd("line processed\n", 1);
 	}
 	if (*line == '\0')
 	{
 		free(func);
-		free(scene);
 		close(fd);
 		return (scene);
 	}
