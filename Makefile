@@ -6,7 +6,7 @@
 #    By: mteerlin <mteerlin@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/03/16 08:52:20 by mteerlin      #+#    #+#                  #
-#    Updated: 2021/04/01 13:26:04 by mteerlin      ########   odam.nl          #
+#    Updated: 2021/04/02 15:54:01 by mteerlin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ all: 		$(NAME)
 
 $(NAME):	$(OBJ) $(HDR)
 #			$(CC) -Lmlx_linux -lmlx -Llibft -lft -framework OpenGL -framework AppKit $(OBJ) -o $(NAME)
-			$(CC) $(OBJ) -Lmlx_linux -lmlx -Llibft -lft -Imlx -Ilibft -L/usr/lib -lXext -lX11 -lm -lz -o $(NAME)
+			$(CC) -fsanitize=address -g $(OBJ) -Lmlx_linux -lmlx -Llibft -lft -Imlx -Ilibft -L/usr/lib -lXext -lX11 -lm -lz -o $(NAME)
 
 %.o:		%.c
 			$(CC) $(CFLAGS) -Imlx -Ilibft -Iget_next_line -c $< -o $@

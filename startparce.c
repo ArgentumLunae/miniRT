@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/09 19:16:49 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/01 13:21:43 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/02 16:28:59 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,26 +64,56 @@ t_rgb	*rt_parse_colour(const char *str)
 void	rt_parse_light(const char **line, void *scene)
 {
 	t_light	*temp;
-	t_light	newlight;
+	t_light	*newlight;
 
-	temp = ((t_scene *)scene)->light;
-	if (temp == NULL)
-		temp = &newlight;
+	printf("parce light\n");
+	newlight = malloc(sizeof(t_light));
+	newlight->coords = rt_parse_vector(line[1]);
+	newlight->lux = ft_atof(line[2]);
+	newlight->colour = rt_parse_colour(line[3]);
+	newlight->next = NULL;
+	
+	if (((t_scene *)scene)->light == NULL)
+		((t_scene *)scene)->light = newlight;
 	else
 	{
-		while (temp->next != NULL)
-			temp = temp->next;
-		temp->next = &newlight;
+		temp = ((t_scene *)scene)->light;
+		while (((t_scene *)scene)->light->next != NULL)
+			((t_scene *)scene)->light = ((t_scene *)scene)->light->next;
+		((t_scene *)scene)->light->next = newlight;
+		((t_scene *)scene)->light = temp;
 	}
-	newlight.coords = rt_parse_vector(line[1]);
-	newlight.lux = ft_atof(line[2]);
-	newlight.colour = rt_parse_colour(line[3]);
-	newlight.next = NULL;
+	
+}
+
+void	rt_parse_camera(const char **line, void *scene)
+{
+	t_camera	*newcamera;
+	t_camera	*temp;
+
+	printf("parce camera\n");
+	newcamera = malloc(sizeof(t_camera));
+	newcamera->coords = rt_parse_vector(line[1]);
+	newcamera->o_vect = rt_parse_vector(line[2]);
+	newcamera->fov = ft_atoi(line[3]);
+	newcamera->next = NULL;
+	if (((t_scene *)scene)->camera == NULL)
+		((t_scene *)scene)->camera = newcamera;
+	else
+	{
+		temp = ((t_scene *)scene)->camera;
+		while (((t_scene *)scene)->camera->next != NULL)
+			((t_scene *)scene)->camera = ((t_scene *)scene)->camera->next;
+		((t_scene *)scene)->camera->next = newcamera;
+		((t_scene *)scene)->camera = temp;
+	}
+	
 }
 
 void	rt_parse_sphere(const char **line, void *scene)
 {
 	t_sphere	*newsphere;
+	t_sphere	*temp;
 
 	newsphere = malloc(sizeof(t_sphere));
 	newsphere->coords = rt_parse_vector(line[1]);
@@ -94,9 +124,11 @@ void	rt_parse_sphere(const char **line, void *scene)
 		((t_scene *)scene)->sphere = newsphere;
 	else
 	{
+		temp = ((t_scene *)scene)->sphere;
 		while (((t_scene *)scene)->sphere->next != NULL)
 			((t_scene *)scene)->sphere = ((t_scene *)scene)->sphere->next;
 		((t_scene *)scene)->sphere->next = newsphere;
+		((t_scene *)scene)->sphere = temp;
 	}
 }
 
@@ -210,6 +242,8 @@ t_f	*rt_fill_func(t_f *func)
 {
 	func['\0'] = *rt_parse_ambient;
 	func['R' - 'A'] = *rt_parse_resolution;
+	func['c' - 'A']	= *rt_parse_camera;
+	func['l' - 'A'] = *rt_parse_light;
 	func['c' + ('y' % 5) - 'A'] = *rt_parse_cylinder;
 	func['p' + ('l' % 5) - 'A'] = *rt_parse_plane;
 	func['s' + ('p' % 5) - 'A'] = *rt_parse_sphere;
@@ -233,11 +267,8 @@ t_scene	*rt_parse(char *file)
 	if (!func)
 		return (scene);
 	func = rt_fill_func(func);
-	scene = ft_calloc(1, sizeof(t_scene));
-	ft_putstr_fd("start reading\n", 1);
 	while (get_next_line(fd, &line))
 	{
-		ft_putstr_fd("start line\n", 1);
 		if (*line == '\0')
 		{
 			free(line);
@@ -248,7 +279,6 @@ t_scene	*rt_parse(char *file)
 		rt_freesplit(split);
 		free(line);
 		line = NULL;
-		ft_putstr_fd("line processed\n", 1);
 	}
 	if (*line == '\0')
 	{

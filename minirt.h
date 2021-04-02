@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 11:04:18 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/01 11:51:38 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/02 15:49:57 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,14 @@ typedef struct s_light
 	struct s_light	*next;
 }	t_light;
 
+typedef struct s_camera
+{
+	t_vector		*coords;
+	t_vector		*o_vect;
+	int				fov;
+	struct s_camera	*next;
+}	t_camera;
+
 typedef struct s_square
 {
 	t_vector		*coords;
@@ -112,6 +120,7 @@ typedef struct s_scene
 {
 	t_resolution	*resolution;
 	t_ambient		*ambient;
+	t_camera		*camera;
 	t_light			*light;
 	t_square		*square;
 	t_sphere		*sphere;
@@ -121,6 +130,6 @@ typedef struct s_scene
 }	t_scene;
 
 t_scene	*rt_parse(char *file);
-void rt_free_scene(t_scene *scene);
+void	rt_free_scene(t_scene *scene);
 
 #endif

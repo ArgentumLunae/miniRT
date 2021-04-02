@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 09:48:41 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/01 13:23:10 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/02 16:29:55 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,35 @@ int	main(int argc, char **argv)
 	printf("resolution:\n\tx: %i\n\ty: %i\n\n", scene->resolution->h, scene->resolution->v);
 	printf("ambient:\n\tratio: %lf\n\tcolour:\n\t\tr: %i\n\t\tg: %i\n\t\tb: %i\n\n", scene->ambient->ratio, scene->ambient->colour->r, scene->ambient->colour->g, scene->ambient->colour->b);
 
+
+	temp = scene->camera;
+	i = 1;
+	while ((t_camera *)temp != NULL)
+	{
+		printf("camera: %i\n", i);
+		printf("\tcoordinates:\n\t\tx: %lf\n\t\ty: %lf\n\t\tz: %lf\n", ((t_camera *)temp)->coords->x, ((t_camera *)temp)->coords->y, ((t_camera *)temp)->coords->z);
+		printf("\torientation vector:\n\t\tx: %lf\n\t\ty: %lf\n\t\tz: %lf\n", ((t_camera *)temp)->o_vect->x, ((t_camera *)temp)->o_vect->y, ((t_camera *)temp)->o_vect->z);
+		printf("\tfield of view:\t%i\n\n", ((t_camera *)temp)->fov);
+		temp = ((t_camera *)temp)->next;
+	}
+	
+	temp = scene->light;
+	i = 1;
+	while ((t_light *)temp != NULL)
+	{
+		printf("light: %i\n", i);
+		printf("\tcoordinates:\n\t\tx: %lf\n\t\ty: %lf\n\t\tz: %lf\n", ((t_light *)temp)->coords->x, ((t_light *)temp)->coords->y, ((t_light *)temp)->coords->z);
+		printf("\tbrightness: %lf", ((t_light *)temp)->lux);
+		printf("\tcolour:\n\t\tr: %i\n\t\tg: %i\n\t\tb: %i\n\n", ((t_light *)temp)->colour->r, ((t_light *)temp)->colour->g, ((t_light *)temp)->colour->b);
+		temp = ((t_light *)temp)->next;
+	}
+	
+
 	temp = scene->cylinder;
 	i = 1;
 	while ((t_cylinder *)temp != NULL)
 	{
-		printf("cylinder: %i\n", 1);
+		printf("cylinder: %i\n", i);
 		printf("\tcoordinates:\n\t\tx: %lf\n\t\ty: %lf\n\t\tz: %lf\n", ((t_cylinder *)temp)->coords->x, ((t_cylinder *)temp)->coords->y, ((t_cylinder *)temp)->coords->z);
 		printf("\torientation vector:\n\t\tx: %lf\n\t\ty: %lf\n\t\tz: %lf\n", ((t_cylinder *)temp)->o_vect->x, ((t_cylinder *)temp)->o_vect->y, ((t_cylinder *)temp)->o_vect->z);
 		printf("\tdiameter: %lf\n", ((t_cylinder *)temp)->dia);
@@ -46,7 +70,7 @@ int	main(int argc, char **argv)
 	i = 1;
 	while ((t_plane *)temp != NULL)
 	{
-		printf("plane %i:\n", 1);
+		printf("plane %i:\n", i);
 		printf("\tcoordinates:\n\t\tx: %lf\n\t\ty: %lf\n\t\tz: %lf\n", ((t_plane *)temp)->coords->x, ((t_plane *)temp)->coords->y, ((t_plane *)temp)->coords->z);
 		printf("\torientation vector:\n\t\tx: %lf\n\t\ty: %lf\n\t\tz: %lf\n", ((t_plane *)temp)->o_vect->x, ((t_plane *)temp)->o_vect->y, ((t_plane *)temp)->o_vect->z);
 		printf("\tcolour:\n\t\tr: %i\n\t\tg: %i\n\t\tb: %i\n\n", ((t_plane *)temp)->colour->r, ((t_plane *)temp)->colour->g, ((t_plane *)temp)->colour->b);
