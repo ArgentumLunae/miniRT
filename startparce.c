@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/09 19:16:49 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/02 16:49:35 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/06 12:55:29 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ void	rt_parse_light(const char **line, void *scene)
 	newlight->lux = ft_atof(line[2]);
 	newlight->colour = rt_parse_colour(line[3]);
 	newlight->next = NULL;
-	
 	if (((t_scene *)scene)->light == NULL)
 		((t_scene *)scene)->light = newlight;
 	else

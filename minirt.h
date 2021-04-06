@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 11:04:18 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/02 15:49:57 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/06 20:11:06 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ typedef struct s_vector
 
 typedef struct s_ray
 {
-	t_vector	start;
-	t_vector	dir;
+	t_vector	*start;
+	t_vector	*dir;
 }	t_ray;
 
 typedef struct s_rgb
@@ -114,7 +114,7 @@ typedef struct s_triangle
 	t_vector			*coord3;
 	t_rgb				*colour;
 	struct s_triangle	*next;
-}				t_triangle;
+}	t_triangle;
 
 typedef struct s_scene
 {
