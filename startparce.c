@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/09 19:16:49 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/02 16:28:59 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/02 16:49:35 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,29 @@ t_rgb	*rt_parse_colour(const char *str)
 	return (colour);
 }
 
+void	rt_parse_camera(const char **line, void *scene)
+{
+	t_camera	*newcamera;
+	t_camera	*temp;
+
+	printf("parce camera\n");
+	newcamera = malloc(sizeof(t_camera));
+	newcamera->coords = rt_parse_vector(line[1]);
+	newcamera->o_vect = rt_parse_vector(line[2]);
+	newcamera->fov = ft_atoi(line[3]);
+	newcamera->next = NULL;
+	if (((t_scene *)scene)->camera == NULL)
+		((t_scene *)scene)->camera = newcamera;
+	else
+	{
+		temp = ((t_scene *)scene)->camera;
+		while (((t_scene *)scene)->camera->next != NULL)
+			((t_scene *)scene)->camera = ((t_scene *)scene)->camera->next;
+		((t_scene *)scene)->camera->next = newcamera;
+		((t_scene *)scene)->camera = temp;
+	}
+}
+
 void	rt_parse_light(const char **line, void *scene)
 {
 	t_light	*temp;
@@ -83,31 +106,6 @@ void	rt_parse_light(const char **line, void *scene)
 		((t_scene *)scene)->light->next = newlight;
 		((t_scene *)scene)->light = temp;
 	}
-	
-}
-
-void	rt_parse_camera(const char **line, void *scene)
-{
-	t_camera	*newcamera;
-	t_camera	*temp;
-
-	printf("parce camera\n");
-	newcamera = malloc(sizeof(t_camera));
-	newcamera->coords = rt_parse_vector(line[1]);
-	newcamera->o_vect = rt_parse_vector(line[2]);
-	newcamera->fov = ft_atoi(line[3]);
-	newcamera->next = NULL;
-	if (((t_scene *)scene)->camera == NULL)
-		((t_scene *)scene)->camera = newcamera;
-	else
-	{
-		temp = ((t_scene *)scene)->camera;
-		while (((t_scene *)scene)->camera->next != NULL)
-			((t_scene *)scene)->camera = ((t_scene *)scene)->camera->next;
-		((t_scene *)scene)->camera->next = newcamera;
-		((t_scene *)scene)->camera = temp;
-	}
-	
 }
 
 void	rt_parse_sphere(const char **line, void *scene)
