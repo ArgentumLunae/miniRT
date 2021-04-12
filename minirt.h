@@ -5,131 +5,56 @@
 /*                                                     +:+                    */
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/03/23 11:04:18 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/06 20:11:06 by mteerlin      ########   odam.nl         */
+/*   Created: 2021/04/02 17:04:58 by mteerlin      #+#    #+#                 */
+/*   Updated: 2021/04/12 14:44:07 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
 # define MINIRT_H
+
+# include "rtscene.h"
 # include <stdbool.h>
 
 typedef void	(*t_f)(const char**, void*);
 
 typedef struct s_mlx
 {
-	void	*mlx;
-	void	*win;
-	void	*img;
-	void	*data;
+	void		*mlx;
+	void		*win;
+	void		*img;
+	void		*data;
+	int			bpp;
+	int			sizel;
+	int			end;
 }	t_mlx;
 
-typedef struct s_vector
-{
-	double	x;
-	double	y;
-	double	z;
-}	t_vector;
+t_vector	*rt_parse_vector(const char *str);
+t_rgb		*rt_parse_colour(const char *str);
+void		rt_parse_resolution(const char **line, void *scene);
+void		rt_parse_ambient(const char **line, void *scene);
+void		rt_parse_camera(const char **line, void *scene);
+void		rt_parse_cylinder(const char **line, void *scene);
+void		rt_parse_light(const char **line, void *scene);
+void		rt_parse_plane(const char **line, void *scene);
+void		rt_parse_sphere(const char **line, void *scene);
+void		rt_parse_square(const char **line, void *scene);
+void		rt_parse_triangle(const char **line, void *scene);
 
-typedef struct s_ray
-{
-	t_vector	*start;
-	t_vector	*dir;
-}	t_ray;
+void		rt_free_scene(t_scene *scene);
+void		rt_freecam(t_camera *c);
+void		rt_freecy(t_cylinder *cy);
+void		rt_freel(t_light *l);
+void		rt_freepl(t_plane *pl);
+void		rt_freesp(t_sphere *sp);
+void		rt_freesq(t_square *sq);
+void		rt_freetr(t_triangle *tr);
+void		rt_freesplit(char **split);
 
-typedef struct s_rgb
-{
-	int	r;
-	int	g;
-	int	b;
-}	t_rgb;
+bool		rt_sphere_inter(t_camera *c, t_sphere *s, double *t);
+bool		rt_plane_inter(t_camera *cam, t_plane *pl, double *t);
+double		rt_light_angle(t_scene *scene, t_sphere *fsp);
 
-typedef struct s_resolution
-{
-	unsigned int	h;
-	unsigned int	v;
-}	t_resolution;
-
-typedef struct s_ambient
-{
-	double	ratio;
-	t_rgb	*colour;
-}	t_ambient;
-
-typedef struct s_light
-{
-	t_vector		*coords;
-	double			lux;
-	t_rgb			*colour;
-	struct s_light	*next;
-}	t_light;
-
-typedef struct s_camera
-{
-	t_vector		*coords;
-	t_vector		*o_vect;
-	int				fov;
-	struct s_camera	*next;
-}	t_camera;
-
-typedef struct s_square
-{
-	t_vector		*coords;
-	t_vector		*o_vect;
-	double			side_size;
-	t_rgb			*colour;
-	struct s_square	*next;
-}				t_square;
-
-typedef struct s_sphere
-{
-	t_vector		*coords;
-	double			rad;
-	t_rgb			*colour;
-	struct s_sphere	*next;
-}				t_sphere;
-
-typedef struct s_plane
-{
-	t_vector		*coords;
-	t_vector		*o_vect;
-	t_rgb			*colour;
-	struct s_plane	*next;
-}				t_plane;
-
-typedef struct s_cylinder
-{
-	t_vector			*coords;
-	t_vector			*o_vect;
-	double				dia;
-	double				hight;
-	t_rgb				*colour;
-	struct s_cylinder	*next;
-}				t_cylinder;
-
-typedef struct s_triangle
-{
-	t_vector			*coord1;
-	t_vector			*coord2;
-	t_vector			*coord3;
-	t_rgb				*colour;
-	struct s_triangle	*next;
-}	t_triangle;
-
-typedef struct s_scene
-{
-	t_resolution	*resolution;
-	t_ambient		*ambient;
-	t_camera		*camera;
-	t_light			*light;
-	t_square		*square;
-	t_sphere		*sphere;
-	t_plane			*plane;
-	t_cylinder		*cylinder;
-	t_triangle		*triangle;
-}	t_scene;
-
-t_scene	*rt_parse(char *file);
-void	rt_free_scene(t_scene *scene);
+int			rt_add_shade(double distance, int color, t_scene *scene);
 
 #endif
