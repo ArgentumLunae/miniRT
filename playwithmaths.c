@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/30 10:50:44 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/06 20:10:36 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/06 20:07:52 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	main(int argc, char **argv)
 	int				bpp;
 	int				sizeline;
 	int				endian;
-	int	x, y;
+	unsigned int	x, y;
 	double			t;
 	int				colour;
 	double			aspratio;
@@ -90,7 +90,7 @@ int	main(int argc, char **argv)
 	if (argc < 2)
 		return (0);
 	scene = rt_parse(argv[1]);
-	bpp = 8 * sizeof(int);
+	bpp = 32;
 	sizeline = scene->resolution->h * scene->resolution->v;
 	endian = 1;
 	aspratio = scene->resolution->h / scene->resolution->v;
