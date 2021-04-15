@@ -6,17 +6,29 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/06 11:38:04 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/10 12:16:53 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/13 19:46:16 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 #include <math.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 double	rt_vect_dot(t_vector *v1, t_vector *v2)
 {
 	return (v1->x * v2->x + v1->y * v2->y + v1->z * v2->z);
+}
+
+t_vector	*rt_vect_cross(t_vector *v1, t_vector *v2)
+{
+	t_vector	*cross;
+
+	cross = malloc(sizeof(t_vector));
+	cross->x = v1->y * v2->z - v1->z * v2->y;
+	cross->y = v1->x * v2->z - v1->z * v2->x;
+	cross->z = v1->y * v2->x - v1->x * v2->y;
+	return (cross);
 }
 
 t_vector	*rt_vect_sub(t_vector *v1, t_vector *v2)

@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/06 12:35:01 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/09 18:50:59 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/13 15:19:03 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef struct s_discriminant
 }	t_discriminant;
 
 double		rt_vect_dot(t_vector *v1, t_vector *v2);
+t_vector	*rt_vect_cross(t_vector *v1, t_vector *v2);
 t_vector	*rt_vect_scale(double c, t_vector v);
 t_vector	*rt_vect_sub(t_vector *v1, t_vector *v2);
 t_vector	*rt_vect_add(t_vector *v1, t_vector *v2);

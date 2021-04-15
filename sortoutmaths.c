@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/10 13:11:47 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/12 14:53:45 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/13 18:22:15 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ static int	get_pixel_colour(t_mlx *prog, t_scene *scene)
 	double	t;
 	bool	hit;
 	int		color;
+	int		shade;
 	int		obj;
 
 	temp = scene->sp;
@@ -62,25 +63,39 @@ static int	get_pixel_colour(t_mlx *prog, t_scene *scene)
 		}
 		temp = ((t_plane *)temp)->next;
 	}
-	if (hit && obj == 1)
+	temp = scene->tr;
+	while (temp)
 	{
-		color = (((t_sphere *)fobj)->color->r << 16) + (((t_sphere *)fobj)->color->g << 8) + ((t_sphere *)fobj)->color->b;
-		color = mlx_get_color_value(prog->mlx, color);
-		scene->cam->rdir = *rt_vect_scale(t, scene->cam->rdir);
-		scene->light->rdir = rt_vect_sub(&scene->cam->rdir, scene->light->coords);
-//		printf("rcam: %lf,%lf,%lf |\trlight: %lf,%lf,%lf\n", scene->cam->rdir.x, scene->cam->rdir.y, scene->cam->rdir.z, scene->light->rdir->x, scene->light->rdir->y, scene->light->rdir->z);
-		t = scene->amb->ratio + (1 - scene->amb->ratio) * rt_light_angle(scene, fobj);
-		return (rt_add_shade(t, color, scene));
+		if (rt_tr_intersect(scene->cam, (t_triangle *)temp, &t))
+		{
+			fobj = temp;
+			obj = 3;
+			hit = true;
+		}
+		temp = ((t_triangle *)temp)->next;
 	}
-	else if (hit && obj == 2)
+	shade = 0;
+	if (hit)
 	{
-		color = (((t_plane *)fobj)->color->r << 16) + (((t_plane *)fobj)->color->g << 8) + ((t_plane *)fobj)->color->b;
+		color = 0x808080;
+		if (obj == 1)
+			color = (((t_sphere *)fobj)->color->r << 16) + (((t_sphere *)fobj)->color->g << 8) + ((t_sphere *)fobj)->color->b;
+		else if (obj == 2)
+			color = (((t_plane *)fobj)->color->r << 16) + (((t_plane *)fobj)->color->g << 8) + ((t_plane *)fobj)->color->b;
+		else if (obj == 3)
+			color = (((t_triangle *)fobj)->color->r << 16) + (((t_triangle *)fobj)->color->g << 8) + ((t_triangle *)fobj)->color->b;
 		color = mlx_get_color_value(prog->mlx, color);
-		scene->cam->rdir = *rt_vect_scale(t, scene->cam->rdir);
-		scene->light->rdir = rt_vect_sub(&scene->cam->rdir, scene->light->coords);
-//		printf("rcam: %lf,%lf,%lf |\trlight: %lf,%lf,%lf\n", scene->cam->rdir.x, scene->cam->rdir.y, scene->cam->rdir.z, scene->light->rdir->x, scene->light->rdir->y, scene->light->rdir->z);
-		t = scene->amb->ratio + (1 - scene->amb->ratio) * rt_light_angle(scene, fobj);
-		return (rt_add_shade(t, color, scene));
+			scene->cam->rdir = *rt_vect_scale(t, scene->cam->rdir);
+			temp = scene->light;
+			while (temp != NULL)
+			{
+				((t_light *)temp)->rdir = rt_vect_sub(&scene->cam->rdir, ((t_light *)temp)->coords);
+//				printf("rcam: %lf,%lf,%lf |\trlight: %lf,%lf,%lf\n", scene->cam->rdir.x, scene->cam->rdir.y, scene->cam->rdir.z, scene->light->rdir->x, scene->light->rdir->y, scene->light->rdir->z);
+				t = ((t_light *)temp)->lux * rt_light_angle(scene, fobj);
+				shade = rt_add_shade(t, color, scene->amb, (t_light *)temp);
+				temp = ((t_light *)temp)->next;
+			}
+		return (shade);
 	}
 	else
 		return (mlx_get_color_value(prog->mlx, 0x808080));
@@ -96,17 +111,18 @@ static void	build_image(t_mlx *prog, t_scene *scene)
 
 	pxl.z = -1;
 	phi = tan(scene->cam->fov / 2 * (M_PI / 180));
-	y = 1;
-	while (y <= scene->res->v)
+	y = 0;
+	while (y < scene->res->v)
 	{
 		pxl.y = (1 - 2 * (y + 0.5) / scene->res->v) * phi;
 		datay = scene->res->h * y;
-		x = 1;
-		while (x <= scene->res->h)
+		x = 0;
+		while (x < scene->res->h)
 		{
 			pxl.x = (2 * ((x + 0.5) / scene->res->h) - 1)* scene->res->ratio * phi;
-			scene->cam->rdir = pxl;
+			scene->cam->rdir = *rt_vect_scale(1 / rt_vect_mag(&pxl, scene->origin), pxl);
 			((int *)prog->data)[datay + x] = get_pixel_colour(prog, scene);
+//			printf("x,y: %i,%i\n", x, y);
 			x++;
 		}
 		y++;

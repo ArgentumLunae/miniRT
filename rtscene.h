@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 11:04:18 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/10 14:57:19 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/13 17:11:18 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,10 @@ typedef struct s_triangle
 	t_vector			*coord1;
 	t_vector			*coord2;
 	t_vector			*coord3;
+	t_vector			*vone;
+	t_vector			*vtwo;
+	t_vector			*vthree;
+	t_vector			*norm;
 	t_rgb				*color;
 	struct s_triangle	*next;
 }				t_triangle;

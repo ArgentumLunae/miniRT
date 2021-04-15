@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/02 17:04:58 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/12 14:44:07 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/13 17:28:30 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,9 @@ void		rt_freesplit(char **split);
 
 bool		rt_sphere_inter(t_camera *c, t_sphere *s, double *t);
 bool		rt_plane_inter(t_camera *cam, t_plane *pl, double *t);
+bool	rt_tr_intersect(t_camera *cam, t_triangle *tr, double *t);
 double		rt_light_angle(t_scene *scene, t_sphere *fsp);
 
-int			rt_add_shade(double distance, int color, t_scene *scene);
+int	rt_add_shade(double distance, int color, t_ambient *amb, t_light *light);
 
 #endif
