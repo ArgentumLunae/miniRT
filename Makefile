@@ -6,7 +6,7 @@
 #    By: mteerlin <mteerlin@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/03/16 08:52:20 by mteerlin      #+#    #+#                  #
-#    Updated: 2021/04/13 09:50:18 by mteerlin      ########   odam.nl          #
+#    Updated: 2021/04/15 11:51:12 by mteerlin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,8 +43,8 @@ CFLAGS	= -Wall -Wextra -Werror
 all: 		$(NAME)
 
 $(NAME):	$(OBJ)
-			$(CC) -Lmlx -lmlx -Llibft -lft -framework OpenGL -framework AppKit $(OBJ) -o $(NAME)
-#			$(CC) -fsanitize=address -g $(OBJ) -Lmlx_linux -lmlx -Llibft -lft -Imlx -Ilibft -Iget_next_line -L/usr/lib -lXext -lX11 -lm -lz -o $(NAME)
+#			$(CC) -Lmlx -lmlx -Llibft -lft -framework OpenGL -framework AppKit $(OBJ) -o $(NAME)
+			$(CC) -fsanitize=address -g $(OBJ) -Lmlx_linux -lmlx -Llibft -lft -Imlx -Ilibft -Iget_next_line -L/usr/lib -lXext -lX11 -lm -lz -o $(NAME)
 
 %.o:		%.c $(HDR)
 			$(CC) $(CFLAGS) -Imlx -Ilibft -Iget_next_line -c $< -o $@

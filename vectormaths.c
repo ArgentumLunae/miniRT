@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/06 11:38:04 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/13 19:46:16 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/15 13:40:04 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ t_vector	*rt_vect_cross(t_vector *v1, t_vector *v2)
 
 	cross = malloc(sizeof(t_vector));
 	cross->x = v1->y * v2->z - v1->z * v2->y;
-	cross->y = v1->x * v2->z - v1->z * v2->x;
-	cross->z = v1->y * v2->x - v1->x * v2->y;
+	cross->y = v1->z * v2->x - v1->x * v2->z;
+	cross->z = v1->x * v2->y - v1->y * v2->x;
 	return (cross);
 }
 

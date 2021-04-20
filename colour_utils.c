@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/09 18:57:28 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/13 11:14:33 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/15 16:55:02 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,15 @@ int	rt_add_shade(double distance, int color, t_ambient *amb, t_light *light)
 	int		r;
 	int		g;
 	int		b;
+	double	ramb;
 
-	if ((light->color->b / 255) > amb->ratio)
-		b = (light->color->b / 255) * distance * (color % 256);
-	else
-		b = (amb->color->b / 255) * amb->ratio * (color % 256);
-	if ((light->color->g / 255) > amb->ratio)
-		g = (light->color->g / 255) * distance * ((color >> 8) % 256);
-	else
-		g = (amb->color->g / 255) * amb->ratio * ((color >> 8) % 256);
-	if ((light->color->r / 255) > amb->ratio)
-		r = (light->color->r / 255) * distance * ((color >> 16) % 256);
-	else
-		r = (amb->color->r / 255) * amb->ratio * ((color >> 16) % 256);
+	ramb = 1 - amb->ratio;
+
+		b = ramb * (light->color->b / 255) * distance * (color % 256);
+		b += amb->ratio * (amb->color->b / 255) * (color % 256);
+		g = ramb * (light->color->g / 255) * distance * ((color >> 8) % 256);
+		g += amb->ratio * (amb->color->g / 255) * ((color >> 8) % 256);
+		r = ramb * (light->color->r / 255) * distance * ((color >> 16) % 256);
+		r += amb->ratio * (amb->color->r / 255) * ((color >> 16) % 256);
 	return ((r << 16) + (g << 8) + b);
 }

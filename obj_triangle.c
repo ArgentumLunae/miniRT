@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/02 16:54:07 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/13 19:53:02 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/15 13:33:31 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 void	rt_parse_triangle(const char **line, void *scene)
 {
 	t_triangle	*newtr;
-	double		normalise;
+	double		normalize;
 
 	newtr = malloc(sizeof(t_triangle));
 	if (!newtr)
@@ -32,8 +32,9 @@ void	rt_parse_triangle(const char **line, void *scene)
 	newtr->vtwo = rt_vect_sub(newtr->coord3, newtr->coord1);
 	newtr->vthree = rt_vect_sub(newtr->coord3, newtr->coord2);
 	newtr->norm = rt_vect_cross(newtr->vone, newtr->vtwo);
-	normalise = 1 / rt_vect_mag(((t_scene *)scene)->origin, newtr->norm);
-	newtr->norm = rt_vect_scale(normalise, *newtr->norm);
+	printf("norm z: %lf\n", newtr->norm->z);
+	normalize = 1 / rt_vect_mag(((t_scene *)scene)->origin, newtr->norm);
+	newtr->norm = rt_vect_scale(normalize, *newtr->norm);
 	newtr->color = rt_parse_colour(line[4]);
 	newtr->next = NULL;
 	if (((t_scene *)scene)->tr == NULL)
@@ -56,30 +57,26 @@ bool	rt_tr_intersect(t_camera *cam, t_triangle *tr, double *t)
 
 	dist = rt_vect_dot(tr->norm, tr->coord1);
 	denom = rt_vect_dot(tr->norm, &cam->rdir);
-	//printf("dist: %lf\tdenom: %lf\n", dist, denom);
 	if (denom == 0)
 		return (false);
 	tt = (dist - rt_vect_dot(tr->norm, cam->coords)) / denom;
-	//printf("t: %lf\ttt: %lf\n", *t, tt);
 	if (tt < *t)
 	{
 		q = rt_vect_scale(tt, cam->rdir);
 		cross = rt_vect_cross(tr->vone, rt_vect_sub(q, tr->coord1));
-		//printf("pre-layer\n");
 		if (rt_vect_dot(cross, tr->norm) >= 0)
 		{
 			free(cross);
 			cross = rt_vect_cross(rt_vect_sub(q, tr->coord1), tr->vtwo);
-			//printf("first layer\n");
 			if (rt_vect_dot(cross, tr->norm) >= 0)
 			{
 				free(cross);
-				cross = rt_vect_cross(tr->vthree, rt_vect_sub(q, tr->coord3));
-				//printf("second layer\n");
+				cross = rt_vect_cross(tr->vthree, rt_vect_sub(q, tr->coord2));
 				if (rt_vect_dot(cross, tr->norm) >= 0)
 				{
 					*t = tt;
-					//printf("third layer\n\n");
+					if (cam->rdir.x == 0 && cam->rdir.y == 0)
+						printf("normal: %lf,%lf,%lf\ndist: %lf\ndenom: %lf\ntt: %lf\nq: %lf,%lf,%lf\n", tr->norm->x, tr->norm->y, tr->norm->z, dist, denom, tt, q->x, q->y, q->z);
 					free(q);
 					free(cross);
 					return (true);

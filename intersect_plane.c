@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/12 14:34:20 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/12 16:39:20 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/15 12:57:19 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ bool	rt_plane_inter(t_camera *cam, t_plane *pl, double *t)
 	d = rt_vect_dot(pl->o_vect, &cam->rdir);
 	if (d == 0)
 		return (false);
-	p = rt_vect_dot(pl->o_vect, cam->coords);
-	c = rt_vect_dot(pl->o_vect, pl->coords);
+	p = rt_vect_dot(pl->o_vect, pl->coords);
+	c = rt_vect_dot(pl->o_vect, cam->coords);
 	dist = fabs((p - c) / d);
 	if (dist > 0.0001f && dist < *t)
 	{
