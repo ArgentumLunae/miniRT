@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/02 16:58:18 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/12 12:15:38 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/20 10:44:16 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ t_rgb	*rt_parse_colour(const char *str)
 	return (color);
 }
 
-void	rt_parse_resolution(const char **line, void *scene)
+void	rt_parse_resolution(const char **line, t_scene *scene)
 {
 	t_resolution	*res;
 
@@ -55,7 +55,7 @@ void	rt_parse_resolution(const char **line, void *scene)
 	((t_scene *)scene)->res = res;
 }
 
-void	rt_parse_ambient(const char **line, void *scene)
+void	rt_parse_ambient(const char **line, t_scene *scene)
 {
 	t_ambient	*a;
 

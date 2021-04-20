@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/02 16:54:07 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/15 13:33:31 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/20 10:47:43 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-void	rt_parse_triangle(const char **line, void *scene)
+void	rt_parse_triangle(const char **line, t_scene *scene)
 {
 	t_triangle	*newtr;
+	t_triangle	*temp;
 	double		normalize;
 
 	newtr = malloc(sizeof(t_triangle));
@@ -32,18 +33,19 @@ void	rt_parse_triangle(const char **line, void *scene)
 	newtr->vtwo = rt_vect_sub(newtr->coord3, newtr->coord1);
 	newtr->vthree = rt_vect_sub(newtr->coord3, newtr->coord2);
 	newtr->norm = rt_vect_cross(newtr->vone, newtr->vtwo);
-	printf("norm z: %lf\n", newtr->norm->z);
-	normalize = 1 / rt_vect_mag(((t_scene *)scene)->origin, newtr->norm);
+	normalize = 1 / rt_vect_mag(scene->origin, newtr->norm);
 	newtr->norm = rt_vect_scale(normalize, *newtr->norm);
 	newtr->color = rt_parse_colour(line[4]);
 	newtr->next = NULL;
-	if (((t_scene *)scene)->tr == NULL)
-		((t_scene *)scene)->tr = newtr;
+	if (scene->tr == NULL)
+		scene->tr = newtr;
 	else
 	{
-		while (((t_scene *)scene)->tr->next != NULL)
-			((t_scene *)scene)->tr = ((t_scene *)scene)->tr->next;
-		((t_scene *)scene)->tr->next = newtr;
+		temp = scene->tr;
+		while (scene->tr->next != NULL)
+			scene->tr = scene->tr->next;
+		scene->tr->next = newtr;
+		scene->tr = temp;
 	}
 }
 
@@ -75,8 +77,6 @@ bool	rt_tr_intersect(t_camera *cam, t_triangle *tr, double *t)
 				if (rt_vect_dot(cross, tr->norm) >= 0)
 				{
 					*t = tt;
-					if (cam->rdir.x == 0 && cam->rdir.y == 0)
-						printf("normal: %lf,%lf,%lf\ndist: %lf\ndenom: %lf\ntt: %lf\nq: %lf,%lf,%lf\n", tr->norm->x, tr->norm->y, tr->norm->z, dist, denom, tt, q->x, q->y, q->z);
 					free(q);
 					free(cross);
 					return (true);

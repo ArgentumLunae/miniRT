@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/02 16:42:03 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/10 13:06:18 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/20 10:37:47 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 
 /* Add a new sphere object to the list of spheres in the scene.*/
-void	rt_parse_sphere(const char **line, void *scene)
+void	rt_parse_sphere(const char **line, t_scene *scene)
 {
 	t_sphere	*newsp;
 	t_sphere	*temp;
@@ -25,15 +25,15 @@ void	rt_parse_sphere(const char **line, void *scene)
 	newsp->rad = ft_atof(line[2]) / 2;
 	newsp->color = rt_parse_colour(line[3]);
 	newsp->next = NULL;
-	if (((t_scene *)scene)->sp == NULL)
-		((t_scene *)scene)->sp = newsp;
+	if (scene->sp == NULL)
+		scene->sp = newsp;
 	else
 	{
-		temp = ((t_scene *)scene)->sp;
-		while (((t_scene *)scene)->sp->next != NULL)
-			((t_scene *)scene)->sp = ((t_scene *)scene)->sp->next;
-		((t_scene *)scene)->sp->next = newsp;
-		((t_scene *)scene)->sp = temp;
+		temp = scene->sp;
+		while (scene->sp->next != NULL)
+			scene->sp = scene->sp->next;
+		scene->sp->next = newsp;
+		scene->sp = temp;
 	}
 }
 

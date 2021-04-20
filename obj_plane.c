@@ -6,30 +6,34 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/02 16:52:38 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/10 13:08:26 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/20 10:37:49 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 #include "../libft/libft.h"
+#include "vmaths.h"
 #include <stdlib.h>
 
-void	rt_parse_plane(const char **line, void *scene)
+void	rt_parse_plane(const char **line, t_scene *scene)
 {
 	t_plane	*newpl;
+	double	normalize;
 
 	newpl = malloc(sizeof(t_plane));
 	newpl->coords = rt_parse_vector(line[1]);
 	newpl->o_vect = rt_parse_vector(line[2]);
+	normalize = 1 / rt_vect_mag(scene->origin, newpl->o_vect);
+	newpl->o_vect = rt_vect_scale(normalize, *newpl->o_vect);
 	newpl->color = rt_parse_colour(line[3]);
 	newpl->next = NULL;
-	if (((t_scene *)scene)->pl == NULL)
-		((t_scene *)scene)->pl = newpl;
+	if (scene->pl == NULL)
+		scene->pl = newpl;
 	else
 	{
-		while (((t_scene *)scene)->pl->next != NULL)
-			((t_scene *)scene)->pl = ((t_scene *)scene)->pl->next;
-		((t_scene *)scene)->pl->next = newpl;
+		while (scene->pl->next != NULL)
+			scene->pl = scene->pl->next;
+		scene->pl->next = newpl;
 	}
 }
 

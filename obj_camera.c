@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/02 16:47:02 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/10 14:46:02 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/20 10:38:09 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../libft/libft.h"
 #include <stdlib.h>
 
-void	rt_parse_camera(const char **line, void *scene)
+void	rt_parse_camera(const char **line, t_scene *scene)
 {
 	t_camera	*newcam;
 	t_camera	*temp;
@@ -24,15 +24,15 @@ void	rt_parse_camera(const char **line, void *scene)
 	newcam->o_vect = rt_parse_vector(line[2]);
 	newcam->fov = ft_atoi(line[3]);
 	newcam->next = NULL;
-	if (((t_scene *)scene)->cam == NULL)
-		((t_scene *)scene)->cam = newcam;
+	if (scene->cam == NULL)
+		scene->cam = newcam;
 	else
 	{
-		temp = ((t_scene *)scene)->cam;
-		while (((t_scene *)scene)->cam->next != NULL)
-			((t_scene *)scene)->cam = ((t_scene *)scene)->cam->next;
-		((t_scene *)scene)->cam->next = newcam;
-		((t_scene *)scene)->cam = temp;
+		temp = scene->cam;
+		while (scene->cam->next != NULL)
+			scene->cam = scene->cam->next;
+		scene->cam->next = newcam;
+		scene->cam = temp;
 	}
 }
 

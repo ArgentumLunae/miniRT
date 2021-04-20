@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 11:04:18 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/13 17:11:18 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/20 13:01:44 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ typedef struct s_cylinder
 {
 	t_vector			*coords;
 	t_vector			*o_vect;
+	t_vector			*top;
+	t_vector			*bot;
 	double				dia;
 	double				hight;
 	t_rgb				*color;

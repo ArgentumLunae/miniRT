@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/10 13:11:47 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/13 18:22:15 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/20 18:25:42 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static int	get_pixel_colour(t_mlx *prog, t_scene *scene)
 		temp = ((t_sphere *)temp)->next;
 	}
 	temp = scene->pl;
-	while (temp != 0)
+	while (temp != NULL)
 	{
 		if (rt_plane_inter(scene->cam, (t_plane *)temp, &t))
 		{
@@ -64,7 +64,7 @@ static int	get_pixel_colour(t_mlx *prog, t_scene *scene)
 		temp = ((t_plane *)temp)->next;
 	}
 	temp = scene->tr;
-	while (temp)
+	while (temp != NULL)
 	{
 		if (rt_tr_intersect(scene->cam, (t_triangle *)temp, &t))
 		{
@@ -74,31 +74,86 @@ static int	get_pixel_colour(t_mlx *prog, t_scene *scene)
 		}
 		temp = ((t_triangle *)temp)->next;
 	}
+	temp = scene->sq;
+	while (temp != NULL)
+	{
+		if	(rt_sq_intersect(scene->cam, (t_square *)temp, scene, &t))
+		{
+			fobj = temp;
+			obj = 4;
+			hit = true;
+		}
+		temp = ((t_square *)temp)->next;
+	}
 	shade = 0;
 	if (hit)
 	{
-		color = 0x808080;
+		color = 0;
 		if (obj == 1)
+		{
 			color = (((t_sphere *)fobj)->color->r << 16) + (((t_sphere *)fobj)->color->g << 8) + ((t_sphere *)fobj)->color->b;
-		else if (obj == 2)
-			color = (((t_plane *)fobj)->color->r << 16) + (((t_plane *)fobj)->color->g << 8) + ((t_plane *)fobj)->color->b;
-		else if (obj == 3)
-			color = (((t_triangle *)fobj)->color->r << 16) + (((t_triangle *)fobj)->color->g << 8) + ((t_triangle *)fobj)->color->b;
-		color = mlx_get_color_value(prog->mlx, color);
+			color = mlx_get_color_value(prog->mlx, color);
 			scene->cam->rdir = *rt_vect_scale(t, scene->cam->rdir);
 			temp = scene->light;
 			while (temp != NULL)
 			{
 				((t_light *)temp)->rdir = rt_vect_sub(&scene->cam->rdir, ((t_light *)temp)->coords);
 //				printf("rcam: %lf,%lf,%lf |\trlight: %lf,%lf,%lf\n", scene->cam->rdir.x, scene->cam->rdir.y, scene->cam->rdir.z, scene->light->rdir->x, scene->light->rdir->y, scene->light->rdir->z);
-				t = ((t_light *)temp)->lux * rt_light_angle(scene, fobj);
+				t = ((t_light *)temp)->lux * rt_light_sp(scene, fobj);
 				shade = rt_add_shade(t, color, scene->amb, (t_light *)temp);
 				temp = ((t_light *)temp)->next;
 			}
+		}
+		else if (obj == 2)
+		{
+			color = (((t_plane *)fobj)->color->r << 16) + (((t_plane *)fobj)->color->g << 8) + ((t_plane *)fobj)->color->b;
+			color = mlx_get_color_value(prog->mlx, color);
+			scene->cam->rdir = *rt_vect_scale(t, scene->cam->rdir);
+			temp = scene->light;
+			while (temp != NULL)
+			{
+				((t_light *)temp)->rdir = rt_vect_sub(&scene->cam->rdir, ((t_light *)temp)->coords);
+//				printf("rcam: %lf,%lf,%lf |\trlight: %lf,%lf,%lf\n", scene->cam->rdir.x, scene->cam->rdir.y, scene->cam->rdir.z, scene->light->rdir->x, scene->light->rdir->y, scene->light->rdir->z);
+				t = ((t_light *)temp)->lux * rt_light_pl(scene, fobj);
+				shade = rt_add_shade(t, color, scene->amb, (t_light *)temp);
+				temp = ((t_light *)temp)->next;
+			}
+		}
+		else if (obj == 3)
+		{
+			color = (((t_triangle *)fobj)->color->r << 16) + (((t_triangle *)fobj)->color->g << 8) + ((t_triangle *)fobj)->color->b;
+			color = mlx_get_color_value(prog->mlx, color);
+			scene->cam->rdir = *rt_vect_scale(t, scene->cam->rdir);
+			temp = scene->light;
+			while (temp != NULL)
+			{
+				((t_light *)temp)->rdir = rt_vect_sub(&scene->cam->rdir, ((t_light *)temp)->coords);
+//				printf("rcam: %lf,%lf,%lf |\trlight: %lf,%lf,%lf\n", scene->cam->rdir.x, scene->cam->rdir.y, scene->cam->rdir.z, scene->light->rdir->x, scene->light->rdir->y, scene->light->rdir->z);
+				t = ((t_light *)temp)->lux * rt_light_tr(scene, fobj);
+				shade = rt_add_shade(t, color, scene->amb, (t_light *)temp);
+				temp = ((t_light *)temp)->next;
+			}
+		}
+		else if (obj == 4)
+		{
+			color = (((t_square *)fobj)->color->r << 16) + (((t_square *)fobj)->color->g << 8) + ((t_square *)fobj)->color->b;
+			color = mlx_get_color_value(prog->mlx, color);
+			scene->cam->rdir = *rt_vect_scale(t, scene->cam->rdir);
+			temp = scene->light;
+			while (temp != NULL)
+			{
+				((t_light *)temp)->rdir = rt_vect_sub(&scene->cam->rdir, ((t_light *)temp)->coords);
+//				printf("rcam: %lf,%lf,%lf |\trlight: %lf,%lf,%lf\n", scene->cam->rdir.x, scene->cam->rdir.y, scene->cam->rdir.z, scene->light->rdir->x, scene->light->rdir->y, scene->light->rdir->z);
+				t = ((t_light *)temp)->lux * rt_light_sq(scene, fobj);
+				shade = rt_add_shade(t, color, scene->amb, (t_light *)temp);
+				temp = ((t_light *)temp)->next;
+			}
+		}
+		
 		return (shade);
 	}
 	else
-		return (mlx_get_color_value(prog->mlx, 0x808080));
+		return (mlx_get_color_value(prog->mlx, 0x0));
 }
 
 static void	build_image(t_mlx *prog, t_scene *scene)
