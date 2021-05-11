@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/02 16:52:38 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/20 10:37:49 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/29 18:42:26 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ void	rt_parse_plane(const char **line, t_scene *scene)
 	double	normalize;
 
 	newpl = malloc(sizeof(t_plane));
-	newpl->coords = rt_parse_vector(line[1]);
-	newpl->o_vect = rt_parse_vector(line[2]);
+	newpl->coords = rt_parse_vector(line[1], 1);
+	newpl->o_vect = rt_parse_vector(line[2], 0);
 	normalize = 1 / rt_vect_mag(scene->origin, newpl->o_vect);
 	newpl->o_vect = rt_vect_scale(normalize, *newpl->o_vect);
 	newpl->color = rt_parse_colour(line[3]);

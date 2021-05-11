@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/02 16:42:03 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/20 10:37:47 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/29 18:42:59 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	rt_parse_sphere(const char **line, t_scene *scene)
 	t_sphere	*temp;
 
 	newsp = malloc(sizeof(t_sphere));
-	newsp->coords = rt_parse_vector(line[1]);
+	newsp->coords = rt_parse_vector(line[1], 1);
 	newsp->rad = ft_atof(line[2]) / 2;
 	newsp->color = rt_parse_colour(line[3]);
 	newsp->next = NULL;

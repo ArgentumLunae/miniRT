@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/02 16:49:17 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/20 10:38:29 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/29 18:42:16 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	rt_parse_light(const char **line, t_scene *scene)
 	t_light	*newlight;
 
 	newlight = malloc(sizeof(t_light));
-	newlight->coords = rt_parse_vector(line[1]);
+	newlight->coords = rt_parse_vector(line[1], 1);
 	newlight->lux = ft_atof(line[2]);
 	newlight->color = rt_parse_colour(line[3]);
 	newlight->next = NULL;

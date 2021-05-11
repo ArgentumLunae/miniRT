@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/02 16:47:02 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/20 10:38:09 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/29 18:42:06 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	rt_parse_camera(const char **line, t_scene *scene)
 	t_camera	*temp;
 
 	newcam = malloc(sizeof(t_camera));
-	newcam->coords = rt_parse_vector(line[1]);
-	newcam->o_vect = rt_parse_vector(line[2]);
+	newcam->coords = rt_parse_vector(line[1], 1);
+	newcam->o_vect = rt_parse_vector(line[2], 0);
 	newcam->fov = ft_atoi(line[3]);
 	newcam->next = NULL;
 	if (scene->cam == NULL)

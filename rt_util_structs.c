@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/02 16:58:18 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/20 10:44:16 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/29 17:56:55 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,27 @@
 #include "../libft/libft.h"
 #include <stdlib.h>
 
-t_vector	*rt_parse_vector(const char *str)
+t_vector	*rt_parse_vector(const char *str, int iscoord)
 {
 	t_vector	*coords;
 	char		**split;
+	int			cnt;
 
 	split = ft_split(str, ',');
 	coords = malloc(sizeof(t_vector));
+	if (!coords)
+		return (NULL);
+	cnt = 0;
+	while (cnt < 3)
+	{
+		if (!split[cnt])
+			return (0);
+		cnt++;
+	}
 	coords->x = ft_atof(split[0]);
 	coords->y = ft_atof(split[1]);
 	coords->z = ft_atof(split[2]);
+	coords->iscoord = iscoord;
 	rt_freesplit(split);
 	return (coords);
 }

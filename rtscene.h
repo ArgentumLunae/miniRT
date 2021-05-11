@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 11:04:18 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/20 13:01:44 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/29 18:53:40 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ typedef struct s_vector
 	double	x;
 	double	y;
 	double	z;
+	int		iscoord;
 }	t_vector;
 
 typedef struct s_ray
@@ -69,6 +70,10 @@ typedef struct s_square
 	t_vector		*coords;
 	t_vector		*o_vect;
 	double			side_size;
+	t_vector		*c1;
+	t_vector		*c2;
+	t_vector		*c3;
+	t_vector		*c4;
 	t_rgb			*color;
 	struct s_square	*next;
 }				t_square;
@@ -114,11 +119,17 @@ typedef struct s_triangle
 	struct s_triangle	*next;
 }				t_triangle;
 
+typedef struct s_base
+{
+	t_square	basesq;
+}	t_base;
+
 typedef struct s_scene
 {
 	t_vector		*origin;
 	t_resolution	*res;
 	t_ambient		*amb;
+	t_base			*base;
 	t_camera		*cam;
 	t_light			*light;
 	t_square		*sq;

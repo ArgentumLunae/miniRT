@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/06 11:38:04 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/15 13:40:04 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/29 17:35:12 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,4 +98,14 @@ t_vector	*rt_vect_dir(t_vector *vs, t_vector *vp)
 	temp = rt_vect_sub(vp, vs);
 	dir = rt_vect_scale(mag, *temp);
 	return (dir);
+}
+
+t_vector	*vect_normalize(t_vector *vs, t_vector *vp)
+{
+	t_vector	*unitvect;
+	double		unitscale;
+
+	unitscale = 1 / rt_vect_mag(vs, vp);
+	unitvect = rt_vect_scale(unitscale, *rt_vect_sub(vp, vs));
+	return (unitvect);
 }

@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/09 17:06:07 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/10 15:02:16 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/05/11 16:36:48 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <math.h>
 #include "minirt.h"
 #include "vmaths.h"
+#include <stdio.h>
 
 static bool	closest_inter(t_discriminant *disc, double *t)
 {
@@ -26,9 +27,11 @@ static bool	closest_inter(t_discriminant *disc, double *t)
 	tone = (-disc->b - sqrtd) / (2 * disc->a);
 	if (tzero > tone)
 		tzero = tone;
+	
 	if (tzero > 0.0000001 && tzero < *t)
 	{
 		*t = tzero;
+		//printf("t = %lf\n", *t);
 		return (true);
 	}
 	return (false);

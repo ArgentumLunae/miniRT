@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/10 13:11:47 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/20 18:25:42 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/05/11 16:36:49 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ static int	get_pixel_colour(t_mlx *prog, t_scene *scene)
 		}
 		temp = ((t_sphere *)temp)->next;
 	}
+	//printf("t = %lf\n", t);
 	temp = scene->pl;
 	while (temp != NULL)
 	{
@@ -184,6 +185,18 @@ static void	build_image(t_mlx *prog, t_scene *scene)
 	}
 }
 
+int	key_release(int keycode, t_mlx *prog)
+{
+	printf("keycode:\t%i\n", keycode);
+	if (keycode == 53)
+	{
+		mlx_destroy_window(prog->mlx, prog->win);
+		exit(0);
+		return (0);
+	}
+	return (0);
+}
+
 int	main(int argc, char **argv)
 {
 	t_mlx	prog;
@@ -199,6 +212,7 @@ int	main(int argc, char **argv)
 	prog.data = mlx_get_data_addr(prog.img, &prog.bpp, &prog.sizel, &prog.end);
 	build_image(&prog, scene);
 	mlx_put_image_to_window(prog.mlx, prog.win, prog.img, 0, 0);
+	mlx_hook(prog.win, 3, 1L<<1, key_release, &prog);
 	mlx_loop(prog.mlx);
 	free(scene->light);
 	return (0);

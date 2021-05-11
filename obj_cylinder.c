@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/02 16:51:29 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/20 18:42:24 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/29 18:43:59 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void	rt_parse_cylinder(const char **line, t_scene *scene)
 	double		normalize;
 
 	newcy = malloc(sizeof(t_cylinder));
-	newcy->coords = rt_parse_vector(line[1]);
-	newcy->o_vect = rt_parse_vector(line[2]);
+	newcy->coords = rt_parse_vector(line[1], 1);
+	newcy->o_vect = rt_parse_vector(line[2], 0);
 	normalize = 1 / rt_vect_mag(scene->origin, newcy->o_vect);
 	newcy->o_vect = rt_vect_scale(normalize, *newcy->o_vect);
 	newcy->dia = ft_atof(line[3]);
@@ -40,11 +40,6 @@ void	rt_parse_cylinder(const char **line, t_scene *scene)
 			scene->cy = scene->cy->next;
 		scene->cy->next = newcy;
 	}
-}
-
-bool	rt_cy_intersect(t_scene sc, t_cylinder cy, double *t)
-{
-	
 }
 
 void	rt_freecy(t_cylinder *cy)

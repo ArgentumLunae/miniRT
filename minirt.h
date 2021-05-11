@@ -6,7 +6,7 @@
 /*   By: mteerlin <mteerlin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/02 17:04:58 by mteerlin      #+#    #+#                 */
-/*   Updated: 2021/04/20 15:42:27 by mteerlin      ########   odam.nl         */
+/*   Updated: 2021/04/29 18:39:23 by mteerlin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct s_mlx
 	int			end;
 }	t_mlx;
 
-t_vector	*rt_parse_vector(const char *str);
+t_vector	*rt_parse_vector(const char *str, int iscoord);
 t_rgb		*rt_parse_colour(const char *str);
 void		rt_parse_resolution(const char **line, t_scene *scene);
 void		rt_parse_ambient(const char **line, t_scene *scene);
